@@ -78,9 +78,6 @@ public class CloudTrackableEventHandler : DefaultTrackableEventHandler
                 Arrow.transform.localPosition = originalLocalPosition;
                 Arrow.transform.localScale = originalLocalScale;
 
-                var newlocalPosition = Arrow.transform.localPosition;
-                var newlocalScale = Arrow.transform.localScale;
-
                 var augmentationRenderers = Arrow.GetComponentsInChildren<Renderer>();
                 foreach (var objrenderer in augmentationRenderers)
                 {
