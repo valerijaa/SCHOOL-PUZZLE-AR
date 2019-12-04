@@ -13,28 +13,28 @@ MonoBehaviour:
   m_Name: VuforiaConfiguration
   m_EditorClassIdentifier: 
   vuforia:
-    vuforiaLicenseKey: AUMOMG//////AAABmXTjPximmUgfjYSRW3fzLq8BLeJTO1NePIZRxXRFmkHth/h6Tu1tDawsIH//+eJ05DhuSG75J69fHhJIpBWN0fOtYqhiiFSyTF5oCifVLBkEfyuhEQdulIwDk4CIbEAWqbrF6BXkTA5Jxozm2TVEIsdFQatCWnTthz7Zx67uSsVHlykneedNH43ICPn3nrJR/rWYSZHCo7tVIpSJCGtFKrWfn/+EDevjaKS8N5w1CKWbLMdogqJxQhFO0H1K8MiW+tdHuhyb6gJh6Xa4USkejqZl6fCU1WehN/uCobH06dfh5a/8dwbg4OXDWmrL8MQhrikobRDsy1DY6ffuAULVpP01voG3+Y+0QtjPzZi8HDQh
+    vuforiaLicenseKey: Af9DeDj/////AAABmdN+aeRkm02hgTaO2QhjXHJYabGdG8o0xLPPyciMQsaP1zDVS5i5UFfKE9lZGLdq60Vg5ZO2KkONkGchNCrid4H2ivIr7rByU7THDDNaqY4+mNFldPpS/6dnFFCEHzDiQl/1GuAICYo5QXvWvg1baTCCHEnzUmc7fRmKqQ38vrfNjbPO1J4mVEwSFuENi6tArybTzqGlngMYfWetQK7IW9+I4pktHn98SmZldIdtIVkguFZBANmnZ1PnSeNJtaJVcxVXXZWuaOSC1FPJYkn0hVXb5K2QaEkAhpWzOBvtOW7F+ToRvVp7+tRDOrTyn8vIIizuL4CxE1fZ3K3LKaOLfoPitGxst3AwzKzkb5sGzLvm
     ufoLicenseKey: QVlyc2ljZi8vLy8vQUFBQUtEekxGeHZhYmt6anN1UEVmdllHWWxsZWdxVkNwTlhVTDIrNlEwTnBWOEJTRC9WZkFwWnNDemYzNnE2YlZjR2N3aUdLZ1hoam5oR2NGNWpxRXh5cmUvQ2t0UUhPeFNiNlFqeUxDNDFmWjN2OXFkZDQxNTBUcFFIOFBxN2U1ZlgxRGU2QUxneHBqUFN2V0Q5dGtVUVFXeW5BNXdZaElUTHZIeTFaRldESXNQRlFvNVIrNi9naEh4cTk4VTlDSTBKaklCLy81VGJqU2t1dFFBdkZRTENLS0VoTVg2Z25TTEh1M2dOczkyWURwUXUrK1gyL0ZGcFNjOU5RSnY3d2xGeVVKUjZ2dkc1R0Q1SHNuVlhrb2NHTGdSRkgwTUo2YWFMUmFMUlczTmpONkJuUFpuVGNibk51S01FU0lMTVNwc0pBeVJlc0F6dWdIVGdxc2c5Z1UrK3hubG9uQlFhLzJLaHliOHVKMy9XUHVSSTQ=
     delayedInitialization: 0
     cameraDeviceModeSetting: -1
-    maxSimultaneousImageTargets: 1
+    maxSimultaneousImageTargets: 4
     maxSimultaneousObjectTargets: 1
     useDelayedLoadingObjectTargets: 0
     modelTargetRecoWhileExtendedTracked: 1
     version: 8.5.9
     eulaAcceptedVersions: '{"Values":["8.3","8.5"]}'
   database:
-    disableModelExtraction: 0
+    disableModelExtraction: 1
   videoBackground:
     numDivisions: 2
     videoBackgroundShader: {fileID: 4800000, guid: f40623b353e2f1943b1b3ba42975db7a,
       type: 3}
     videoBackgroundEnabled: 1
   deviceTracker:
-    autoInitTracker: 1
-    autoStartTracker: 1
+    autoInitTracker: 0
+    autoStartTracker: 0
     arcoreRequirement: 1
-    autoImportArcore: 0
+    autoImportArcore: 1
   smartTerrain:
     autoInitTracker: 0
     autoStartTracker: 0
