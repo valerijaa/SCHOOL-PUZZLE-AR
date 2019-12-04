@@ -70,9 +70,16 @@ public class CloudTrackableEventHandler : DefaultTrackableEventHandler
                 currentArrow = Arrow.transform;
 
                 // set new target augmentation parent to cloud target
+                var originalLocalPosition = Arrow.transform.localPosition;
+                var originalLocalScale = Arrow.transform.localScale;
+
                 Arrow.transform.SetParent(CloudTarget);
-                Arrow.transform.localPosition = Vector3.zero;
-                Arrow.transform.localScale = Vector3.one;
+                // set original scale and position, because its reset during SetParent above
+                Arrow.transform.localPosition = originalLocalPosition;
+                Arrow.transform.localScale = originalLocalScale;
+
+                var newlocalPosition = Arrow.transform.localPosition;
+                var newlocalScale = Arrow.transform.localScale;
 
                 var augmentationRenderers = Arrow.GetComponentsInChildren<Renderer>();
                 foreach (var objrenderer in augmentationRenderers)
