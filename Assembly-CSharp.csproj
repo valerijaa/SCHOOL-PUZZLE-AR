@@ -112,6 +112,7 @@
     <Compile Include="Assets\MessageBox.cs" />
     <Compile Include="Assets\scoreKeeper.cs" />
     <Compile Include="Assets\Scripts\Click.cs" />
+    <Compile Include="Assets\Stop.cs" />
     <None Include="Assets\Lean\Common\Examples\Shaders\Alpha.shader" />
     <None Include="Assets\StreamingAssets\Vuforia\VuforiaMars_Images.xml" />
     <None Include="Assets\Lean\Common\Examples\Fonts\OFL.txt" />
