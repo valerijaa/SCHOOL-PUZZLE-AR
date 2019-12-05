@@ -1,13 +1,11 @@
-using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ArrowClickHandler : MonoBehaviour
+public class StarClickHandler : MonoBehaviour
 {
-    GameObject arrow;
     GameObject textInstructions;
 
-    public Color ActiveArrowColor;
+    public Color ActiveColor;
 
     public Stop StopData; // is set in CloudTrackableEventHandler
 
@@ -36,32 +34,29 @@ public class ArrowClickHandler : MonoBehaviour
         RaycastHit Hit;
         if (Physics.Raycast(ray, out Hit))
         {
-            if (Hit.transform.tag != "Arrow")
+            Debug.Log(Hit.transform.tag);
+            // we want to handle input only on 'Star' object
+            if (Hit.transform.tag != "Star")
                 return;
 
             // update styles, text and score only if arrow wasn't already scored
             if (!scoreKeeper.IsStepScored(StopData.VuforiaName))
             {
-                StyleAsScored(this.gameObject);
+                StyleAsScored(this.transform.parent.gameObject);
                 textInstructions.GetComponentInChildren<Text>().text = StopData.Data;
                 scoreKeeper.AddScore(StopData.VuforiaName);
             }
         }
     }
 
-    public void StyleAsScored(GameObject arrow)
+    public void StyleAsScored(GameObject pointer)
     {
+        var star = pointer.transform.GetChild(1);
+        var arrow = pointer.transform.GetChild(0);
+        Destroy(arrow.gameObject); // destroy arrow object
 
-        // TODO: check if current tracking image is already marked as scored
-        var child = arrow.transform.GetChild(0);
-        var child_2 = arrow.transform.GetChild(1);
-
-        var rend = child.GetComponent<Renderer>();
-        var rend_2 = child_2.GetComponent<Renderer>();
-
-        Destroy(arrow.GetComponent<Animator>());
-
-        rend.material.SetColor("_Color", ActiveArrowColor);
-        rend_2.material.SetColor("_Color", ActiveArrowColor);
+        // change color of star
+        var rend = star.GetComponent<Renderer>();
+        rend.material.SetColor("_Color", ActiveColor);
     }
 }

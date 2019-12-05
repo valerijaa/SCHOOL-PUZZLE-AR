@@ -20,8 +20,8 @@ public class CloudTrackableEventHandler : DefaultTrackableEventHandler
 
     #endregion // PRIVATE_MEMBERS
 
-    public GameObject OriginalArrow;
-    public GameObject ArrowPrefab;
+    public GameObject OriginalPreviewPointerPrefab;
+    public GameObject PointerPrefab;
 
     #region MONOBEHAVIOUR_METHODS
     protected override void Start()
@@ -30,8 +30,8 @@ public class CloudTrackableEventHandler : DefaultTrackableEventHandler
 
         CloudTarget = this.transform;
 
-        // hide arrow by default
-        OriginalArrow.SetActive(false);
+        // hide pointer by default
+        OriginalPreviewPointerPrefab.SetActive(false);
 
         m_CloudRecoBehaviour = FindObjectOfType<CloudRecoBehaviour>();
     }
@@ -58,14 +58,14 @@ public class CloudTrackableEventHandler : DefaultTrackableEventHandler
     {
         Debug.Log("<color=green>TargetCreated(): </color>" + targetSearchResult.TargetName);
 
-        // if there are already any arrows visible, destroy them
-        var existingArrows = GameObject.FindGameObjectsWithTag("Arrow");
-        if (existingArrows.Any())
+        // if there are already any pointers (arrow + star) visible, destroy them
+        var existingPointers = GameObject.FindGameObjectsWithTag("Pointer");
+        if (existingPointers.Any())
         {
-            foreach(var existingArrow in existingArrows)
+            foreach (var existingPointer in existingPointers)
             {
-                Debug.Log("<color=yellow>Delete existing arrow: </color>");
-                Destroy(existingArrow);
+                Debug.Log("<color=yellow>Delete existing poiinter</color>");
+                Destroy(existingPointer);
             }
         }
 
@@ -82,16 +82,17 @@ public class CloudTrackableEventHandler : DefaultTrackableEventHandler
             Debug.Log("<color=blue>" + uwr.downloadHandler.text + "</color>");
             var stopData = JsonUtility.FromJson<Stop>(uwr.downloadHandler.text);
 
-            var Arrow = Instantiate(ArrowPrefab);
-            var arrowClickHandlerComponent = Arrow.GetComponent<ArrowClickHandler>();
+            var Pointer = Instantiate(PointerPrefab);
+            var star = Pointer.transform.GetChild(1);
+            var arrowClickHandlerComponent = star.GetComponent<StarClickHandler>();
             arrowClickHandlerComponent.StopData = stopData;
-            Arrow.transform.SetParent(CloudTarget);
+            Pointer.transform.SetParent(CloudTarget);
 
             // set original scale and position, because its reset during SetParent above
-            Arrow.transform.localPosition = OriginalArrow.transform.localPosition;
-            Arrow.transform.localScale = OriginalArrow.transform.localScale;
+            Pointer.transform.localPosition = OriginalPreviewPointerPrefab.transform.localPosition;
+            Pointer.transform.localScale = OriginalPreviewPointerPrefab.transform.localScale;
 
-            var augmentationRenderers = Arrow.GetComponentsInChildren<Renderer>();
+            var augmentationRenderers = Pointer.GetComponentsInChildren<Renderer>();
             foreach (var objrenderer in augmentationRenderers)
             {
                 objrenderer.gameObject.layer = LayerMask.NameToLayer("Default");
@@ -101,10 +102,10 @@ public class CloudTrackableEventHandler : DefaultTrackableEventHandler
             // if this stop was already scored, then display it with scored styles, same as on click on arrow
             if (scoreKeeper.IsStepScored(stopData.VuforiaName))
             {
-                arrowClickHandlerComponent.StyleAsScored(Arrow.gameObject);
+                arrowClickHandlerComponent.StyleAsScored(Pointer.gameObject);
             }
 
-            Arrow.gameObject.SetActive(true);
+            Pointer.gameObject.SetActive(true);
         }
         else
         {
