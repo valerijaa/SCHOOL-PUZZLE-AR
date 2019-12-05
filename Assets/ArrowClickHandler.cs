@@ -1,53 +1,67 @@
-using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class ArrowClickHandler : MonoBehaviour
 {
-    string btnName;
-    public GameObject arrow;
-    public Color active;
-    public GameObject canvas;
-    public bool isSet = false;
+    GameObject arrow;
+    GameObject textInstructions;
+
+    public Color ActiveArrowColor;
+
+    public Stop StopData; // is set in CloudTrackableEventHandler
+
     // Start is called before the first frame update
     void Start()
     {
-        canvas = GameObject.Find("Canvas");
-        canvas.GetComponentInChildren<Text>().enabled = false;
+        textInstructions = GameObject.Find("Instruction");
     }
 
     // Update is called once per frame
     void Update()
     {
-        Ray ray = Camera.main.ScreenPointToRay(Input.GetTouch(0).position);
+        Ray ray = new Ray(); // default value
+
+        // when on android we want to use get touch position
+        if (Application.platform == RuntimePlatform.Android)
+        {
+            ray = Camera.main.ScreenPointToRay(Input.GetTouch(0).position);
+        }
+        // we want to use mouse position, used for development & quick testing
+        else if (Input.GetMouseButtonDown(0))
+        {
+            ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        }
+
         RaycastHit Hit;
         if (Physics.Raycast(ray, out Hit))
         {
-            btnName = Hit.transform.tag;
-            var arrows = GameObject.FindGameObjectsWithTag(btnName);
-            arrow = arrows.SingleOrDefault(x => x.gameObject == Hit.transform.gameObject);
-            Color active = new Color(0.0078f, 0.74901f, 0.0078f);
+            if (Hit.transform.tag != "Arrow")
+                return;
 
-            var child = arrow.transform.GetChild(0);
-            var child_2 = arrow.transform.GetChild(1);
-
-            var rend = child.GetComponent<Renderer>();
-            var rend_2 = child_2.GetComponent<Renderer>();
-
-            Destroy(arrow.GetComponent<Animator>());
-            rend.material.SetColor("_Color", active);
-            rend_2.material.SetColor("_Color", active);
-            var text = canvas.GetComponentInChildren<Text>();
-            text.enabled = true;
-            var script = arrow.GetComponent<arrow>();
-
-            if (script.isSet) return;
-            scoreKeeper.score += 1;
-            GameObject.Find("ScoreCanvas").GetComponentInChildren<UnityEngine.UI.Text>().text = scoreKeeper.score + " of 10";
-            script.isSet = true;
-            text.text = script.displayText ?? "banana";
+            // update styles, text and score only if arrow wasn't already scored
+            if (!scoreKeeper.IsStepScored(StopData.VuforiaName))
+            {
+                StyleAsScored(this.gameObject);
+                textInstructions.GetComponentInChildren<Text>().text = StopData.Data;
+                scoreKeeper.AddScore(StopData.VuforiaName);
+            }
         }
+    }
+
+    public void StyleAsScored(GameObject arrow)
+    {
+
+        // TODO: check if current tracking image is already marked as scored
+        var child = arrow.transform.GetChild(0);
+        var child_2 = arrow.transform.GetChild(1);
+
+        var rend = child.GetComponent<Renderer>();
+        var rend_2 = child_2.GetComponent<Renderer>();
+
+        Destroy(arrow.GetComponent<Animator>());
+
+        rend.material.SetColor("_Color", ActiveArrowColor);
+        rend_2.material.SetColor("_Color", ActiveArrowColor);
     }
 }

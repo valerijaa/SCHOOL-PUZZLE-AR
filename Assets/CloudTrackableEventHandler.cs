@@ -6,22 +6,22 @@ Copyright (c) 2010-2015 Qualcomm Connected Experiences, Inc. All Rights Reserved
 Vuforia is a trademark of PTC Inc., registered in the United States and other 
 countries.
 ===============================================================================*/
+using System.Collections;
+using System.Linq;
 using UnityEngine;
+using UnityEngine.Networking;
 using Vuforia;
 
 public class CloudTrackableEventHandler : DefaultTrackableEventHandler
 {
     #region PRIVATE_MEMBERS
     CloudRecoBehaviour m_CloudRecoBehaviour;
-
-    Transform currentArrow;
-    Transform currentArrowParent;
     Transform CloudTarget = null;
 
     #endregion // PRIVATE_MEMBERS
 
-    public GameObject Arrow;
-
+    public GameObject OriginalArrow;
+    public GameObject ArrowPrefab;
 
     #region MONOBEHAVIOUR_METHODS
     protected override void Start()
@@ -31,7 +31,7 @@ public class CloudTrackableEventHandler : DefaultTrackableEventHandler
         CloudTarget = this.transform;
 
         // hide arrow by default
-        Arrow.SetActive(false);
+        OriginalArrow.SetActive(false);
 
         m_CloudRecoBehaviour = FindObjectOfType<CloudRecoBehaviour>();
     }
@@ -56,38 +56,62 @@ public class CloudTrackableEventHandler : DefaultTrackableEventHandler
     /// </summary>
     public void TargetCreated(TargetFinder.CloudRecoSearchResult targetSearchResult)
     {
-
         Debug.Log("<color=green>TargetCreated(): </color>" + targetSearchResult.TargetName);
-        //m_CloudContentManager.HandleTargetFinderResult(targetSearchResult);
 
-        if (Arrow != null)
+        // if there are already any arrows visible, destroy them
+        var existingArrows = GameObject.FindGameObjectsWithTag("Arrow");
+        if (existingArrows.Any())
         {
-            if (Arrow.transform.parent != CloudTarget.transform)
+            foreach(var existingArrow in existingArrows)
             {
-                // store reference to content manager's parent object of the augmentation
-                currentArrowParent = Arrow.transform.parent;
-                // store reference to the current augmentation
-                currentArrow = Arrow.transform;
-
-                // set new target augmentation parent to cloud target
-                var originalLocalPosition = Arrow.transform.localPosition;
-                var originalLocalScale = Arrow.transform.localScale;
-
-                Arrow.transform.SetParent(CloudTarget);
-                // set original scale and position, because its reset during SetParent above
-                Arrow.transform.localPosition = originalLocalPosition;
-                Arrow.transform.localScale = originalLocalScale;
-
-                var augmentationRenderers = Arrow.GetComponentsInChildren<Renderer>();
-                foreach (var objrenderer in augmentationRenderers)
-                {
-                    objrenderer.gameObject.layer = LayerMask.NameToLayer("Default");
-                    objrenderer.enabled = true;
-                }
-                Arrow.gameObject.SetActive(true);
+                Debug.Log("<color=yellow>Delete existing arrow: </color>");
+                Destroy(existingArrow);
             }
         }
+
+        StartCoroutine(LoadSelectedStopDataAndShowArrow(targetSearchResult));
     }
+
+    IEnumerator LoadSelectedStopDataAndShowArrow(TargetFinder.CloudRecoSearchResult targetSearchResult)
+    {
+        UnityWebRequest uwr = UnityWebRequest.Get(scoreKeeper.Hostname + "stop?name="+ targetSearchResult.TargetName);
+        yield return uwr.SendWebRequest();
+
+        if (!uwr.isNetworkError)
+        {
+            Debug.Log("<color=blue>" + uwr.downloadHandler.text + "</color>");
+            var stopData = JsonUtility.FromJson<Stop>(uwr.downloadHandler.text);
+
+            var Arrow = Instantiate(ArrowPrefab);
+            var arrowClickHandlerComponent = Arrow.GetComponent<ArrowClickHandler>();
+            arrowClickHandlerComponent.StopData = stopData;
+            Arrow.transform.SetParent(CloudTarget);
+
+            // set original scale and position, because its reset during SetParent above
+            Arrow.transform.localPosition = OriginalArrow.transform.localPosition;
+            Arrow.transform.localScale = OriginalArrow.transform.localScale;
+
+            var augmentationRenderers = Arrow.GetComponentsInChildren<Renderer>();
+            foreach (var objrenderer in augmentationRenderers)
+            {
+                objrenderer.gameObject.layer = LayerMask.NameToLayer("Default");
+                objrenderer.enabled = true;
+            }
+
+            // if this stop was already scored, then display it with scored styles, same as on click on arrow
+            if (scoreKeeper.IsStepScored(stopData.VuforiaName))
+            {
+                arrowClickHandlerComponent.StyleAsScored(Arrow.gameObject);
+            }
+
+            Arrow.gameObject.SetActive(true);
+        }
+        else
+        {
+            Debug.LogError("Failed to fetch data");
+        }
+    }
+
     #endregion // PUBLIC_METHODS
 
 
