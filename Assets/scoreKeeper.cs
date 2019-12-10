@@ -39,6 +39,18 @@ public class scoreKeeper : MonoBehaviour
     {
         Scores.Add(recognizedTargetName);
         UpdateScoreText(Scores.Count);
+
+        // if score is max, person has won, hide other all other texts as score, navigation, fact
+        if (Scores.Count == MaxStops)
+        {
+            var textsContainer = GameObject.Find("Texts");
+            textsContainer.transform.Find("FactContainer").gameObject.SetActive(false);
+            textsContainer.transform.Find("NavigationContainer").gameObject.SetActive(false);
+            ScoresText.gameObject.SetActive(false);
+
+            // show only 'winning text'
+            textsContainer.transform.Find("WinContainer").gameObject.SetActive(true);
+        }
     }
 
     public static void UpdateScoreText(int score)
@@ -55,7 +67,7 @@ public class scoreKeeper : MonoBehaviour
         {
             Debug.Log("<color=blue>"+ uwr.downloadHandler.text+"</color>");
             var stats = JsonUtility.FromJson<Stats>(uwr.downloadHandler.text);
-            MaxStops = stats.TotalStops;
+            MaxStops = 2; // stats.TotalStops;
             UpdateScoreText(0);
         }
         else

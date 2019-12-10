@@ -9,14 +9,15 @@ public class HideTexts : MonoBehaviour
         var textsContainer = GameObject.Find("Texts");
 
         // hide and reset texts for all containers
-        ResetTextAndDisable(textsContainer.transform.Find("FactContainer"));
-        ResetTextAndDisable(textsContainer.transform.Find("NavigationContainer"));
-        ResetTextAndDisable(textsContainer.transform.Find("WinContainer"));
-    }
+        var factsContainer = textsContainer.transform.Find("FactContainer");
+        factsContainer.gameObject.SetActive(false);
+        factsContainer.gameObject.GetComponentInChildren<Text>().text = "";
 
-    private void ResetTextAndDisable(Transform transform)
-    {
-        transform.gameObject.SetActive(false);
-        transform.gameObject.GetComponentInChildren<Text>().text = "";
+        var navigationContainer = textsContainer.transform.Find("NavigationContainer");
+        navigationContainer.gameObject.SetActive(false);
+        navigationContainer.gameObject.GetComponentInChildren<Text>().text = "";
+
+        var winContainer = textsContainer.transform.Find("WinContainer");
+        winContainer.gameObject.SetActive(false);
     }
 }
