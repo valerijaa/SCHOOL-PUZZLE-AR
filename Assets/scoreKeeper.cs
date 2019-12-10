@@ -44,7 +44,6 @@ public class scoreKeeper : MonoBehaviour
         if (Scores.Count == MaxStops)
         {
             var textsContainer = GameObject.Find("Texts");
-            textsContainer.transform.Find("FactContainer").gameObject.SetActive(false);
             textsContainer.transform.Find("NavigationContainer").gameObject.SetActive(false);
             ScoresText.gameObject.SetActive(false);
 
