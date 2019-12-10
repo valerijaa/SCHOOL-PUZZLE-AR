@@ -9,6 +9,7 @@ public class Stop
     public string VuforiaName;
     public string Type;
     public string Data;
+    public string Fact;
 }
 
 [System.Serializable]

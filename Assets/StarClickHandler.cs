@@ -3,8 +3,6 @@ using UnityEngine.UI;
 
 public class StarClickHandler : MonoBehaviour
 {
-    GameObject textInstructions;
-
     public Color ActiveColor;
 
     public Stop StopData; // is set in CloudTrackableEventHandler
@@ -12,7 +10,6 @@ public class StarClickHandler : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        textInstructions = GameObject.Find("Instruction");
     }
 
     // Update is called once per frame
@@ -43,7 +40,19 @@ public class StarClickHandler : MonoBehaviour
             if (!scoreKeeper.IsStepScored(StopData.VuforiaName))
             {
                 StyleAsScored(this.transform.parent.gameObject);
-                textInstructions.GetComponentInChildren<Text>().text = StopData.Data;
+
+                // set and enable navigation text
+                var textsContainer = GameObject.Find("Texts");
+                var navigationContainer = textsContainer.transform.Find("NavigationContainer");
+                navigationContainer.GetComponentInChildren<Text>().text = StopData.Data;
+                navigationContainer.gameObject.SetActive(true);
+
+                // show fact
+                var factContainer = textsContainer.transform.Find("FactContainer");
+                factContainer.gameObject.GetComponentInChildren<Text>().text = StopData.Fact;
+                factContainer.gameObject.SetActive(true);
+
+                // update score
                 scoreKeeper.AddScore(StopData.VuforiaName);
             }
         }

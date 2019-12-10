@@ -66,6 +66,7 @@
     <Compile Include="Assets\CloudErrorHandler.cs" />
     <Compile Include="Assets\CloudRecoEventHandler.cs" />
     <Compile Include="Assets\CloudTrackableEventHandler.cs" />
+    <Compile Include="Assets\HideTexts.cs" />
     <Compile Include="Assets\Lean\Common\Examples\Scripts\LeanCircuit.cs" />
     <Compile Include="Assets\Lean\Common\Examples\Scripts\LeanDocumentation.cs" />
     <Compile Include="Assets\Lean\Common\Examples\Scripts\LeanLinkTo.cs" />

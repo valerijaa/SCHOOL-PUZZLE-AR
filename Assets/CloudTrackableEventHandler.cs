@@ -17,6 +17,7 @@ public class CloudTrackableEventHandler : DefaultTrackableEventHandler
     #region PRIVATE_MEMBERS
     CloudRecoBehaviour m_CloudRecoBehaviour;
     Transform CloudTarget = null;
+    GameObject textsContainer;
 
     #endregion // PRIVATE_MEMBERS
 
@@ -34,6 +35,7 @@ public class CloudTrackableEventHandler : DefaultTrackableEventHandler
         OriginalPreviewPointerPrefab.SetActive(false);
 
         m_CloudRecoBehaviour = FindObjectOfType<CloudRecoBehaviour>();
+        textsContainer = GameObject.Find("Texts");
     }
     #endregion // MONOBEHAVIOUR_METHODS
 
@@ -143,6 +145,10 @@ public class CloudTrackableEventHandler : DefaultTrackableEventHandler
             // Changing CloudRecoBehaviour.CloudRecoEnabled to true will call TargetFinder.StartRecognition()
             // and also call all registered ICloudRecoEventHandler.OnStateChanged() with true.
             m_CloudRecoBehaviour.CloudRecoEnabled = true;
+
+            // Hide current 'Fact' container, we want it to be visible only when tracking is active
+            var factContainer = textsContainer.transform.Find("FactContainer");
+            factContainer.gameObject.SetActive(false);
         }
     }
 
