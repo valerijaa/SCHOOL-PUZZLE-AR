@@ -67,7 +67,7 @@ public class scoreKeeper : MonoBehaviour
         {
             Debug.Log("<color=blue>"+ uwr.downloadHandler.text+"</color>");
             var stats = JsonUtility.FromJson<Stats>(uwr.downloadHandler.text);
-            MaxStops = 2; // stats.TotalStops;
+            MaxStops = stats.TotalStops;
             UpdateScoreText(0);
         }
         else
